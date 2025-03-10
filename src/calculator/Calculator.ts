@@ -1,4 +1,6 @@
-import { Deck, Draw, DrawSeed } from "./Deck"
+import { Deck } from "./Deck"
+import { Draw } from "./Draw"
+import { DrawSeed } from "./DrawSeed"
 
 export class Calculator {
   static #factorialCache = new Map<number, number>()
