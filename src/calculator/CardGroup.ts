@@ -1,3 +1,15 @@
+export type CardGroupPojo = {
+  readonly type: string
+  readonly rank: string
+  readonly suit: string
+  readonly size: number
+  readonly exclusions: string[]
+}
+
+export type CardGroupsPojo = {
+  [key: string]: CardGroupPojo
+}
+
 export class CardGroup {
   static TYPE = Object.freeze({
     SUIT: "SUIT",
@@ -9,7 +21,6 @@ export class CardGroup {
   #rank: string
   #suit: string
   #size: number
-
   #exclusions: string[]
 
   constructor(type: string) {
@@ -89,16 +100,41 @@ export class CardGroup {
     return this
   }
 
-  toPOJO() {
+  static fromPojo(pojo: CardGroupPojo): CardGroup {
+    return new CardGroup(pojo.type)
+      .setRank(pojo.rank)
+      .setSuit(pojo.suit)
+      .setSize(pojo.size)
+      .setExclusions(pojo.exclusions)
+  }
+
+  static fromPojoGroups(pojo: CardGroupsPojo): Map<string, CardGroup> {
+    const res = new Map<string, CardGroup>()
+    Object.entries(pojo).forEach(([key, value]) => {
+      res.set(key, CardGroup.fromPojo(value))
+    })
+    return res
+  }
+
+  static toPojoGroups(groups: Map<string, CardGroup>): CardGroupsPojo {
+    const pojo: CardGroupsPojo = {}
+    for (const [key, value] of groups.entries()) {
+      pojo[key] = value.toPOJO()
+    }
+    return pojo
+  }
+
+  toPOJO(): CardGroupPojo {
     return {
       type: this.#type,
       rank: this.#rank,
       suit: this.#suit,
       size: this.#size,
+      exclusions: this.#exclusions,
     }
   }
 
-  toString() {
+  toString(): string {
     return JSON.stringify(this.toPOJO())
   }
 

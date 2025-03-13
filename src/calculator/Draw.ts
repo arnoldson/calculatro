@@ -1,4 +1,10 @@
-import { CardGroup } from "./CardGroup"
+import { CardGroup, CardGroupsPojo } from "./CardGroup"
+
+export type DrawPojo = {
+  readonly size: number
+  readonly type: string
+  readonly groups: CardGroupsPojo
+}
 
 export class Draw {
   #size: number
@@ -19,27 +25,19 @@ export class Draw {
     return this.#groups.values()
   }
 
-  #groupsAsPOJO() {
-    const pojo: PojoWithUnknownKeys = {}
-    for (const [key, group] of this.#groups.entries()) {
-      pojo[key] = group.toPOJO()
-    }
-    return pojo
+  static fromPojo(pojo: DrawPojo): Draw {
+    return new Draw(pojo.size, pojo.type, CardGroup.fromPojoGroups(pojo.groups))
   }
 
-  toPOJO() {
+  toPOJO(): DrawPojo {
     return {
       size: this.#size,
       type: this.#type,
-      groups: this.#groupsAsPOJO(),
+      groups: CardGroup.toPojoGroups(this.#groups),
     }
   }
 
   toString() {
     return JSON.stringify(this.toPOJO())
   }
-}
-
-type PojoWithUnknownKeys = {
-  [key: string]: any
 }

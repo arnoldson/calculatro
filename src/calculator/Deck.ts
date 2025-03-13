@@ -1,25 +1,48 @@
 import { CardGroup } from "./CardGroup"
-import { PlayingCard, RANK, SUIT } from "./PlayingCard"
+import { PlayingCard, PlayingCardPojo, RANK, SUIT } from "./PlayingCard"
+
+export type DeckPojo = {
+  readonly cards: PlayingCardPojo[]
+  readonly counts: {
+    [key: string]: number
+  }
+}
 
 export class Deck {
   #cards: PlayingCard[]
   #counts: Map<string, number>
 
-  constructor() {
-    this.#cards = []
-    this.#counts = new Map<string, number>()
+  constructor(cards: PlayingCard[], counts: Map<string, number>) {
+    this.#cards = cards
+    this.#counts = counts
+  }
+
+  static createEmptyDeck(): Deck {
+    const cards: PlayingCard[] = []
+    const counts = new Map<string, number>()
     // set default counts
     for (const suit of Object.values(SUIT)) {
-      this.#counts.set(suit, 0)
+      counts.set(suit, 0)
     }
     for (const rank of Object.values(RANK)) {
-      this.#counts.set(rank, 0)
+      counts.set(rank, 0)
     }
     for (const suit of Object.values(SUIT)) {
       for (const rank of Object.values(RANK)) {
-        this.#counts.set(rank + suit, 0)
+        counts.set(rank + suit, 0)
       }
     }
+    return new Deck(cards, counts)
+  }
+
+  static createStandardDeck(): Deck {
+    const deck = Deck.createEmptyDeck()
+    for (const suit of Object.values(SUIT)) {
+      for (const rank of Object.values(RANK)) {
+        deck.addCard(new PlayingCard(rank, suit))
+      }
+    }
+    return deck
   }
 
   addCard(card: PlayingCard): Deck {
@@ -80,14 +103,17 @@ export class Deck {
     }
   }
 
-  static createStandardDeck(): Deck {
-    const deck = new Deck()
-    for (const suit of Object.values(SUIT)) {
-      for (const rank of Object.values(RANK)) {
-        deck.addCard(new PlayingCard(rank, suit))
-      }
+  static fromPojo(pojo: DeckPojo): Deck {
+    const cards: PlayingCard[] = PlayingCard.fromPojoCards(pojo.cards)
+    const counts = new Map<string, number>(Object.entries(pojo.counts))
+    return new Deck(cards, counts)
+  }
+
+  toPojo(): DeckPojo {
+    return {
+      cards: PlayingCard.toPojoCards(this.#cards),
+      counts: Object.fromEntries(this.#counts),
     }
-    return deck
   }
 
   toJSON(): string {

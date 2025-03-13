@@ -1,5 +1,12 @@
-import { CardGroup } from "./CardGroup"
+import { CardGroup, CardGroupsPojo } from "./CardGroup"
 import { Draw } from "./Draw"
+
+export type DrawSeedPojo = {
+  readonly size: number
+  readonly type: string
+  readonly groups: CardGroupsPojo
+  readonly occupied: number
+}
 
 export class DrawSeed {
   static UNITIALIZED_TYPE = ""
@@ -135,5 +142,21 @@ export class DrawSeed {
       draws.push(seed.createDraw())
     }
     return draws
+  }
+
+  static fromPojo(pojo: DrawSeedPojo): DrawSeed {
+    return new DrawSeed(pojo.size)
+      .setType(pojo.type)
+      .setGroups(CardGroup.fromPojoGroups(pojo.groups))
+      .setOccupied(pojo.occupied)
+  }
+
+  toPojo(): DrawSeedPojo {
+    return {
+      size: this.#size,
+      type: this.#type,
+      groups: CardGroup.toPojoGroups(this.#groups),
+      occupied: this.#occupied,
+    }
   }
 }
