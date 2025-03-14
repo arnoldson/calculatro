@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Modal } from "./Modal"
 import NumberSlider from "./NumberSlider"
 import { CardGroup, CardGroupPojo } from "../calculator/CardGroup"
@@ -12,11 +12,14 @@ const ranks = Object.values(PlayingCard.RANK)
 const suits = Object.values(PlayingCard.SUIT)
 
 export function DrawSelect() {
+  useEffect(() => {
+    initialize()
+  }, [])
   const [isFirstModalOpen, setIsFirstModalOpen] = useState(false)
   const [isSecondModalOpen, setIsSecondModalOpen] = useState(false)
 
   // for current deck
-  const [deck, setDeck] = useState<Deck>(Deck.createStandardDeck())
+  const [deck, setDeck] = useState<Deck>(Deck.createEmptyDeck())
   // for current draw
   const [size, setSize] = useState<number>(5)
   const [type, setType] = useState<string>("")
@@ -36,6 +39,12 @@ export function DrawSelect() {
   function shouldDisableCalculateButton(): boolean {
     if (groups.length < 1) return true
     return false
+  }
+
+  function initialize() {
+    resetCardGroup()
+    resetDraw()
+    setDeck(Deck.createStandardDeck())
   }
 
   function resetDraw() {
