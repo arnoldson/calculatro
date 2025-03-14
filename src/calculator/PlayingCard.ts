@@ -1,10 +1,3 @@
-export const SUIT = Object.freeze({
-  DIAMOND: "DIAMOND",
-  HEART: "HEART",
-  SPADE: "SPADE",
-  CLUB: "CLUB",
-})
-
 // const BASE_SCORE = Object.freeze({
 //   TWO: 2,
 //   THREE: 3,
@@ -21,28 +14,35 @@ export const SUIT = Object.freeze({
 //   ACE: 11,
 // })
 
-export const RANK = Object.freeze({
-  TWO: "2",
-  THREE: "3",
-  FOUR: "4",
-  FIVE: "5",
-  SIX: "6",
-  SEVEN: "7",
-  EIGHT: "8",
-  NINE: "9",
-  TEN: "10",
-  JACK: "J",
-  QUEEN: "Q",
-  KING: "K",
-  ACE: "A",
-})
-
 export type PlayingCardPojo = {
   readonly rank: string
   readonly suit: string
 }
 
 export class PlayingCard {
+  static SUIT = Object.freeze({
+    DIAMOND: "DIAMOND",
+    HEART: "HEART",
+    SPADE: "SPADE",
+    CLUB: "CLUB",
+  })
+
+  static RANK = Object.freeze({
+    TWO: "2",
+    THREE: "3",
+    FOUR: "4",
+    FIVE: "5",
+    SIX: "6",
+    SEVEN: "7",
+    EIGHT: "8",
+    NINE: "9",
+    TEN: "10",
+    JACK: "J",
+    QUEEN: "Q",
+    KING: "K",
+    ACE: "A",
+  })
+
   #rank: string
   #suit: string
 

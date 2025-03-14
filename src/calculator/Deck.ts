@@ -1,5 +1,5 @@
 import { CardGroup } from "./CardGroup"
-import { PlayingCard, PlayingCardPojo, RANK, SUIT } from "./PlayingCard"
+import { PlayingCard, PlayingCardPojo } from "./PlayingCard"
 
 export type DeckPojo = {
   readonly cards: PlayingCardPojo[]
@@ -21,14 +21,14 @@ export class Deck {
     const cards: PlayingCard[] = []
     const counts = new Map<string, number>()
     // set default counts
-    for (const suit of Object.values(SUIT)) {
+    for (const suit of Object.values(PlayingCard.SUIT)) {
       counts.set(suit, 0)
     }
-    for (const rank of Object.values(RANK)) {
+    for (const rank of Object.values(PlayingCard.RANK)) {
       counts.set(rank, 0)
     }
-    for (const suit of Object.values(SUIT)) {
-      for (const rank of Object.values(RANK)) {
+    for (const suit of Object.values(PlayingCard.SUIT)) {
+      for (const rank of Object.values(PlayingCard.RANK)) {
         counts.set(rank + suit, 0)
       }
     }
@@ -37,8 +37,8 @@ export class Deck {
 
   static createStandardDeck(): Deck {
     const deck = Deck.createEmptyDeck()
-    for (const suit of Object.values(SUIT)) {
-      for (const rank of Object.values(RANK)) {
+    for (const suit of Object.values(PlayingCard.SUIT)) {
+      for (const rank of Object.values(PlayingCard.RANK)) {
         deck.addCard(new PlayingCard(rank, suit))
       }
     }

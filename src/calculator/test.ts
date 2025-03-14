@@ -3,14 +3,15 @@ import { CardGroup } from "./CardGroup"
 import { Deck } from "./Deck"
 import { DrawSeed } from "./DrawSeed"
 
-import { RANK } from "./PlayingCard"
-// import { SUIT } from "./PlayingCard"
+import { PlayingCard } from "./PlayingCard"
 
 export function test() {
   const deck = Deck.createStandardDeck()
-  const group1 = new CardGroup(CardGroup.TYPE.RANK).setRank(RANK.ACE).setSize(1)
+  const group1 = new CardGroup(CardGroup.TYPE.RANK)
+    .setRank(PlayingCard.RANK.ACE)
+    .setSize(1)
   const group2 = new CardGroup(CardGroup.TYPE.RANK)
-    .setRank(RANK.EIGHT)
+    .setRank(PlayingCard.RANK.EIGHT)
     .setSize(1)
   // console.log("group1: ", group2.toString())
 

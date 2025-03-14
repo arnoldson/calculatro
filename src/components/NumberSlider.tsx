@@ -1,11 +1,11 @@
-import React, { useState } from "react"
 import "../css/numberslider.css"
 
 interface SliderProps {
   min?: number
   max?: number
   step?: number
-  defaultValue?: number
+  value: number
+  setValue: (value: number) => void
   onChange?: (value: number) => void
 }
 
@@ -13,11 +13,10 @@ const NumberSlider: React.FC<SliderProps> = ({
   min = 0,
   max = 100,
   step = 1,
-  defaultValue = 50,
   onChange,
+  value,
+  setValue,
 }) => {
-  const [value, setValue] = useState<number>(defaultValue)
-
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = Number(event.target.value)
     setValue(newValue)
