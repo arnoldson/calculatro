@@ -1,0 +1,27 @@
+button {
+  background-color: #007bff; /* Primary blue */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+  background-color: #0056b3; /* Darker blue */
+}
+
+button:active {
+  background-color: #004494;
+  transform: scale(0.98); /* Slight click effect */
+}
+
+button:focus {
+  outline: 3px solid rgba(0, 123, 255, 0.5); /* Focus ring */
+}
+
+button.selected {
+  background-color: #28a745; /* Green for selected state */
+}
