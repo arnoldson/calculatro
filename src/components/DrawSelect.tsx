@@ -22,17 +22,17 @@ export function DrawSelect() {
   const [deck, setDeck] = useState<Deck>(Deck.createEmptyDeck())
   // for current draw
   const [size, setSize] = useState<number>(5)
-  const [type, setType] = useState<string>("")
+  const [drawType, setDrawType] = useState<string>("")
   const [groups, setGroups] = useState<CardGroupPojo[]>([])
   // for current card group
   const [groupSize, setGroupSize] = useState<number>(1)
-  const [rank, setRank] = useState<string>("")
-  const [suit, setSuit] = useState<string>("")
+  const [groupRank, setGroupRank] = useState<string>("")
+  const [groupSuit, setGroupSuit] = useState<string>("")
   // for results
   const [drawProbability, setDrawProbability] = useState<number>(-1)
 
   function shouldDisableAddCardGroup(): boolean {
-    if (type === "" || groups.length === size) return true
+    if (drawType === "" || groups.length === size) return true
     return false
   }
 
@@ -49,21 +49,21 @@ export function DrawSelect() {
 
   function resetDraw() {
     setSize(5)
-    setType("")
+    setDrawType("")
     setGroups([])
   }
 
   function resetCardGroup() {
     setGroupSize(1)
-    setRank("")
-    setSuit("")
+    setGroupRank("")
+    setGroupSuit("")
   }
 
   function addCardGroup() {
-    const cardGroup: CardGroupPojo = new CardGroup(type)
+    const cardGroup: CardGroupPojo = new CardGroup(drawType)
       .setSize(groupSize)
-      .setRank(rank)
-      .setSuit(suit)
+      .setRank(groupRank)
+      .setSuit(groupSuit)
       .toPOJO()
     setGroups((prevGroups) => {
       return [...prevGroups, cardGroup]
@@ -78,7 +78,7 @@ export function DrawSelect() {
   }
 
   function calculateDrawProbability() {
-    const seed = new DrawSeed(size).setType(type)
+    const seed = new DrawSeed(size).setType(drawType)
     for (const pojoGroup of groups) {
       seed.addGroup(CardGroup.fromPojo(pojoGroup))
     }
@@ -103,7 +103,12 @@ export function DrawSelect() {
           {types.map((type) => {
             if (type === CardGroup.TYPE.NEGATIVE) return null
             return (
-              <ButtonInputString key={type} value={type} setValue={setType} />
+              <ButtonInputString
+                key={type}
+                value={type}
+                setValue={setDrawType}
+                selectedValue={drawType}
+              />
             )
           })}
         </div>
@@ -139,19 +144,31 @@ export function DrawSelect() {
         isOpen={isSecondModalOpen}
         onClose={() => setIsSecondModalOpen(false)}
       >
-        {type === CardGroup.TYPE.CARD || type === CardGroup.TYPE.RANK ? (
+        {drawType === CardGroup.TYPE.CARD ||
+        drawType === CardGroup.TYPE.RANK ? (
           <div>
             <h2>RANK:</h2>
             {ranks.map((rank) => (
-              <ButtonInputString key={rank} value={rank} setValue={setRank} />
+              <ButtonInputString
+                key={rank}
+                value={rank}
+                setValue={setGroupRank}
+                selectedValue={groupRank}
+              />
             ))}
           </div>
         ) : undefined}
-        {type === CardGroup.TYPE.CARD || type === CardGroup.TYPE.SUIT ? (
+        {drawType === CardGroup.TYPE.CARD ||
+        drawType === CardGroup.TYPE.SUIT ? (
           <div>
             <h2>SUIT:</h2>
             {suits.map((suit) => (
-              <ButtonInputString key={suit} value={suit} setValue={setSuit} />
+              <ButtonInputString
+                key={suit}
+                value={suit}
+                setValue={setGroupSuit}
+                selectedValue={groupSuit}
+              />
             ))}
           </div>
         ) : undefined}
