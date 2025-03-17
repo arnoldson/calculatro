@@ -1,0 +1,10 @@
+.card-count {
+  background-color: #4caf50; /* Green background */
+  color: white; /* White text */
+  padding: 10px 20px; /* Padding around the text */
+  border-radius: 12px; /* Rounded corners */
+  font-size: 16px; /* Font size */
+  font-weight: bold; /* Bold text */
+  display: inline-block; /* Make the container wrap around text */
+  text-align: center; /* Center the text */
+}

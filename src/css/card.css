@@ -1,0 +1,44 @@
+.card {
+  width: 150px;
+  height: 220px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  position: relative;
+  font-family: "Arial", sans-serif;
+  font-weight: bold;
+}
+
+.corner {
+  position: absolute;
+  font-size: 18px;
+}
+
+.top-left {
+  top: 8px;
+  left: 8px;
+}
+
+.bottom-right {
+  bottom: 8px;
+  right: 8px;
+  transform: rotate(180deg);
+}
+
+.suit {
+  font-size: 50px;
+  margin-top: 20px;
+}
+
+/* Suit Colors */
+.red {
+  color: red;
+}
+.black {
+  color: black;
+}

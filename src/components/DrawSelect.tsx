@@ -7,6 +7,9 @@ import { PlayingCard } from "../calculator/PlayingCard"
 import { Deck } from "../calculator/Deck"
 import { DrawSeed } from "../calculator/DrawSeed"
 import { Calculator } from "../calculator/Calculator"
+import { Card } from "./Card"
+import React from "react"
+import CardCount from "./CardCount"
 const types = Object.values(CardGroup.TYPE)
 const ranks = Object.values(PlayingCard.RANK)
 const suits = Object.values(PlayingCard.SUIT)
@@ -73,6 +76,11 @@ export function DrawSelect() {
     setIsFirstModalOpen(true)
   }
 
+  function createDraw() {
+    initialize()
+    setIsFirstModalOpen(true)
+  }
+
   function formatProbabilityForDisplay(): string {
     return (drawProbability * 100).toFixed(2) + "%"
   }
@@ -83,7 +91,6 @@ export function DrawSelect() {
       seed.addGroup(CardGroup.fromPojo(pojoGroup))
     }
     setDrawProbability(Calculator.calculateDrawSeedProbability(seed, deck))
-    resetDraw()
   }
 
   return (
@@ -91,7 +98,17 @@ export function DrawSelect() {
       {drawProbability > -1 ? (
         <h2>Draw Probability: {formatProbabilityForDisplay()}</h2>
       ) : undefined}
-      <button onClick={() => setIsFirstModalOpen(true)}>Create Draw</button>
+      <h2>Draw:</h2>
+      {groups.map((group, index) => {
+        return (
+          <React.Fragment key={index}>
+            <Card rank={group.rank} suit={group.suit} />
+            <CardCount count={group.size} />
+          </React.Fragment>
+        )
+      })}
+      <h2>Deck:</h2>
+      <button onClick={createDraw}>Create Draw</button>
       {/* Modal 1/2: Select Type and Size of Draw */}
       <Modal
         isOpen={isFirstModalOpen}
