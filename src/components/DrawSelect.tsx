@@ -62,6 +62,18 @@ export function DrawSelect() {
     setGroupSuit("")
   }
 
+  function isValidCardGroup(): boolean {
+    if (groupSize < 1) return false
+    if (drawType === CardGroup.TYPE.CARD) {
+      if (groupRank === "" || groupSuit === "") return false
+    } else if (drawType === CardGroup.TYPE.RANK) {
+      if (groupRank === "") return false
+    } else if (drawType === CardGroup.TYPE.SUIT) {
+      if (groupSuit === "") return false
+    }
+    return true
+  }
+
   function addCardGroup() {
     const cardGroup: CardGroupPojo = new CardGroup(drawType)
       .setSize(groupSize)
@@ -201,7 +213,17 @@ export function DrawSelect() {
             setValue={setGroupSize}
           />
         </div>
-        <button onClick={addCardGroup}>ADD</button>
+        <button
+          onClick={() => {
+            if (isValidCardGroup()) {
+              addCardGroup()
+            } else {
+              alert("Invalid Card Group; All fields must be filled out.")
+            }
+          }}
+        >
+          ADD
+        </button>
         <button
           onClick={() => {
             setIsSecondModalOpen(false)
