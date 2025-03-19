@@ -41,7 +41,7 @@ export const Card: React.FC<PlayingCardProps> = ({ rank, suit }) => {
       <div className={`corner top-left ${suitColor(suit)}`}>
         {rank} {suitSymbol(suit)}
       </div>
-      <div className="suit black">{suitSymbol(suit)}</div>
+      <div className={`suit ${suitColor(suit)}`}>{suitSymbol(suit)}</div>
       <div className={`corner bottom-right ${suitColor(suit)}`}>
         {rank} {suitSymbol(suit)}
       </div>
