@@ -115,12 +115,14 @@ export function DrawSelect() {
         onClose={() => setIsFirstModalOpen(false)}
       >
         <button onClick={() => setIsFirstModalOpen(false)}>Close</button>
+        <button onClick={() => initialize()}>Reset</button>
         <div>
           <h2>TYPE:</h2>
           {types.map((type) => {
             if (type === CardGroup.TYPE.NEGATIVE) return null
             return (
               <ButtonInputString
+                disabled={groups.length > 0}
                 key={type}
                 value={type}
                 setValue={setDrawType}
