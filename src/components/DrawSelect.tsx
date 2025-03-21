@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react"
 import { Modal } from "./Modal"
 import NumberSlider from "./NumberSlider"
-import { CardGroup, CardGroupPojo } from "../calculator/CardGroup"
+import {
+  CardGroup,
+  CardGroupPojo,
+  CardGroupsPojo,
+} from "../calculator/CardGroup"
 import { ButtonInputString } from "./ButtonInputString"
 import { PlayingCard } from "../calculator/PlayingCard"
 import { DrawSeed } from "../calculator/DrawSeed"
@@ -19,7 +23,8 @@ export function DrawSelect({ setDrawSeed }: { setDrawSeed: Function }) {
   // for current draw
   const [size, setSize] = useState<number>(5)
   const [drawType, setDrawType] = useState<string>("")
-  const [groups, setGroups] = useState<CardGroupPojo[]>([])
+  const [groups, setGroups] = useState<CardGroupsPojo>({})
+  const [occupiedSize, setOccupiedSize] = useState<number>(0)
   // for current card group
   const [groupSize, setGroupSize] = useState<number>(1)
   const [groupRank, setGroupRank] = useState<string>("")
@@ -34,7 +39,7 @@ export function DrawSelect({ setDrawSeed }: { setDrawSeed: Function }) {
   }, [groups])
 
   function shouldDisableAddCardGroup(): boolean {
-    if (drawType === "" || groups.length === size) return true
+    if (drawType === "" || occupiedSize === size) return true
     return false
   }
 
@@ -46,7 +51,7 @@ export function DrawSelect({ setDrawSeed }: { setDrawSeed: Function }) {
   function resetDraw() {
     setSize(5)
     setDrawType("")
-    setGroups([])
+    setGroups({})
   }
 
   function resetCardGroup() {
@@ -68,14 +73,21 @@ export function DrawSelect({ setDrawSeed }: { setDrawSeed: Function }) {
   }
 
   function addCardGroup() {
-    const cardGroup: CardGroupPojo = new CardGroup(drawType)
+    const cardGroup: CardGroup = new CardGroup(drawType)
       .setSize(groupSize)
       .setRank(groupRank)
       .setSuit(groupSuit)
-      .toPOJO()
+    const existingCardGroup = groups[cardGroup.countKey()]
+    if (existingCardGroup) {
+      cardGroup.setSize(existingCardGroup.size + cardGroup.size())
+    }
+    const cardGroupPojo: CardGroupPojo = cardGroup.toPOJO()
+
     setGroups((prevGroups) => {
-      return [...prevGroups, cardGroup]
+      return { ...prevGroups, [cardGroup.countKey()]: cardGroupPojo }
     })
+    setOccupiedSize((prevOccupiedSize) => prevOccupiedSize + cardGroup.size())
+
     resetCardGroup()
     setIsSecondModalOpen(false)
     setIsFirstModalOpen(true)
@@ -87,22 +99,16 @@ export function DrawSelect({ setDrawSeed }: { setDrawSeed: Function }) {
   }
 
   function createDrawSeed() {
-    console.log("createDrawSeed")
-    console.log("groups size: " + groups.length)
-
     const seed = new DrawSeed(size).setType(drawType)
-    for (const pojoGroup of groups) {
-      console.log("group: " + JSON.stringify(pojoGroup))
-
-      seed.addGroup(CardGroup.fromPojo(pojoGroup))
-    }
+    const cardGroups: Map<string, CardGroup> = CardGroup.fromPojoGroups(groups)
+    seed.setGroups(cardGroups).setOccupied(occupiedSize)
     setDrawSeed(seed)
   }
 
   return (
     <>
       <h2>Draw:</h2>
-      {groups.map((group, index) => {
+      {Object.values(groups).map((group, index) => {
         return (
           <React.Fragment key={index}>
             <Card rank={group.rank} suit={group.suit} />
@@ -130,7 +136,7 @@ export function DrawSelect({ setDrawSeed }: { setDrawSeed: Function }) {
             if (type === CardGroup.TYPE.NEGATIVE) return null
             return (
               <ButtonInputString
-                disabled={groups.length > 0}
+                disabled={occupiedSize > 0}
                 key={type}
                 value={type}
                 setValue={setDrawType}
@@ -197,7 +203,7 @@ export function DrawSelect({ setDrawSeed }: { setDrawSeed: Function }) {
           <h2>SIZE:</h2>
           <NumberSlider
             min={1}
-            max={size}
+            max={size - occupiedSize}
             step={1}
             value={groupSize}
             setValue={setGroupSize}
