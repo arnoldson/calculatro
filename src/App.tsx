@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { DrawSelect } from "./components/DrawSelect"
 import { DrawSeed } from "./calculator/DrawSeed"
 import { Deck } from "./calculator/Deck"
@@ -11,6 +11,16 @@ function App() {
   const [deck, setDeck] = useState<Deck>(Deck.createStandardDeck())
   // for results
   const [drawProbability, setDrawProbability] = useState<number>(-1)
+
+  function initialize() {
+    setDrawSeed(null)
+    setDeck(Deck.createStandardDeck())
+    setDrawProbability(-1)
+  }
+
+  useEffect(() => {
+    initialize()
+  }, [])
 
   function formatProbabilityForDisplay(): string {
     return (drawProbability * 100).toFixed(2) + "%"
