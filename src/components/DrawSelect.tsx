@@ -13,9 +13,6 @@ const ranks = Object.values(PlayingCard.RANK)
 const suits = Object.values(PlayingCard.SUIT)
 
 export function DrawSelect({ setDrawSeed }: { setDrawSeed: Function }) {
-  useEffect(() => {
-    initialize()
-  }, [])
   const [isFirstModalOpen, setIsFirstModalOpen] = useState(false)
   const [isSecondModalOpen, setIsSecondModalOpen] = useState(false)
 
@@ -27,6 +24,14 @@ export function DrawSelect({ setDrawSeed }: { setDrawSeed: Function }) {
   const [groupSize, setGroupSize] = useState<number>(1)
   const [groupRank, setGroupRank] = useState<string>("")
   const [groupSuit, setGroupSuit] = useState<string>("")
+
+  useEffect(() => {
+    initialize()
+  }, [])
+
+  useEffect(() => {
+    createDrawSeed()
+  }, [groups])
 
   function shouldDisableAddCardGroup(): boolean {
     if (drawType === "" || groups.length === size) return true
@@ -114,20 +119,11 @@ export function DrawSelect({ setDrawSeed }: { setDrawSeed: Function }) {
         <button
           onClick={() => {
             setIsFirstModalOpen(false)
-            initialize()
           }}
         >
-          Cancel
+          Close
         </button>
         <button onClick={() => initialize()}>Reset</button>
-        <button
-          onClick={() => {
-            createDrawSeed()
-            setIsFirstModalOpen(false)
-          }}
-        >
-          Done
-        </button>
         <div>
           <h2>TYPE:</h2>
           {types.map((type) => {
