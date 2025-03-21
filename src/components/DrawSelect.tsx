@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useId, useState } from "react"
 import { Modal } from "./Modal"
 import NumberSlider from "./NumberSlider"
 import {
@@ -16,9 +16,17 @@ const types = Object.values(CardGroup.TYPE)
 const ranks = Object.values(PlayingCard.RANK)
 const suits = Object.values(PlayingCard.SUIT)
 
-export function DrawSelect({ setDrawSeed }: { setDrawSeed: Function }) {
-  const [isFirstModalOpen, setIsFirstModalOpen] = useState(false)
-  const [isSecondModalOpen, setIsSecondModalOpen] = useState(false)
+export function DrawSelect({
+  setDrawSeed,
+  activeModalId,
+  setActiveModalId,
+}: {
+  setDrawSeed: Function
+  activeModalId: string
+  setActiveModalId: Function
+}) {
+  const modal1Id = "drawselect" + useId()
+  const modal2Id = "drawselect" + useId()
 
   // for current draw
   const [size, setSize] = useState<number>(5)
@@ -49,6 +57,7 @@ export function DrawSelect({ setDrawSeed }: { setDrawSeed: Function }) {
   }
 
   function resetDraw() {
+    setOccupiedSize(0)
     setSize(5)
     setDrawType("")
     setGroups({})
@@ -89,13 +98,6 @@ export function DrawSelect({ setDrawSeed }: { setDrawSeed: Function }) {
     setOccupiedSize((prevOccupiedSize) => prevOccupiedSize + cardGroup.size())
 
     resetCardGroup()
-    setIsSecondModalOpen(false)
-    setIsFirstModalOpen(true)
-  }
-
-  function createDraw() {
-    initialize()
-    setIsFirstModalOpen(true)
   }
 
   function createDrawSeed() {
@@ -116,20 +118,24 @@ export function DrawSelect({ setDrawSeed }: { setDrawSeed: Function }) {
           </React.Fragment>
         )
       })}
-      <button onClick={createDraw}>Create Draw</button>
-      {/* Modal 1/2: Select Type and Size of Draw */}
-      <Modal
-        isOpen={isFirstModalOpen}
-        onClose={() => setIsFirstModalOpen(false)}
+      <button
+        onClick={() => {
+          initialize()
+          setActiveModalId(modal1Id)
+        }}
       >
+        Create Draw
+      </button>
+      {/* Modal 1/2: Select Type and Size of Draw */}
+      <Modal modalId={modal1Id} activeModalId={activeModalId}>
         <button
           onClick={() => {
-            setIsFirstModalOpen(false)
+            setActiveModalId("")
           }}
         >
           Close
         </button>
-        <button onClick={() => initialize()}>Reset</button>
+        <button onClick={initialize}>Reset</button>
         <div>
           <h2>TYPE:</h2>
           {types.map((type) => {
@@ -159,18 +165,14 @@ export function DrawSelect({ setDrawSeed }: { setDrawSeed: Function }) {
         <button
           disabled={shouldDisableAddCardGroup()}
           onClick={() => {
-            setIsFirstModalOpen(false)
-            setIsSecondModalOpen(true)
+            setActiveModalId(modal2Id)
           }}
         >
           Add Cards
         </button>
       </Modal>
       {/* Modal 2/2: Add Card Group */}
-      <Modal
-        isOpen={isSecondModalOpen}
-        onClose={() => setIsSecondModalOpen(false)}
-      >
+      <Modal modalId={modal2Id} activeModalId={activeModalId}>
         {drawType === CardGroup.TYPE.CARD ||
         drawType === CardGroup.TYPE.RANK ? (
           <div>
@@ -213,6 +215,7 @@ export function DrawSelect({ setDrawSeed }: { setDrawSeed: Function }) {
           onClick={() => {
             if (isValidCardGroup()) {
               addCardGroup()
+              setActiveModalId(modal1Id)
             } else {
               alert("Invalid Card Group; All fields must be filled out.")
             }
@@ -222,8 +225,7 @@ export function DrawSelect({ setDrawSeed }: { setDrawSeed: Function }) {
         </button>
         <button
           onClick={() => {
-            setIsSecondModalOpen(false)
-            setIsFirstModalOpen(true)
+            setActiveModalId(modal1Id)
           }}
         >
           CANCEL

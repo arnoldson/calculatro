@@ -1,28 +1,16 @@
-import { useEffect, ReactNode } from "react"
+import { ReactNode } from "react"
 import { createPortal } from "react-dom"
 import "../css/modal.css"
 
 interface ModalProps {
-  isOpen: boolean
-  onClose: () => void
+  modalId: string
+  activeModalId: string
   children: ReactNode
 }
 
-export function Modal({ isOpen, onClose, children }: ModalProps) {
-  useEffect(() => {
-    function handler(e: KeyboardEvent) {
-      if (e.key === "Escape") onClose()
-    }
-
-    document.addEventListener("keydown", handler)
-
-    return () => {
-      document.removeEventListener("keydown", handler)
-    }
-  }, [onClose])
-
+export function Modal({ modalId, activeModalId, children }: ModalProps) {
   return createPortal(
-    <div className={`modal-overlay ${isOpen ? "show" : ""}`}>
+    <div className={`modal-overlay ${modalId === activeModalId ? "show" : ""}`}>
       <div className="modal">{children}</div>
     </div>,
     document.querySelector("#modal-container") as HTMLElement

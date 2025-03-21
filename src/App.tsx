@@ -6,6 +6,7 @@ import { Calculator } from "./calculator/Calculator"
 import "./styles.css"
 
 function App() {
+  const [activeModalId, setActiveModalId] = useState<string>("")
   const [drawSeed, setDrawSeed] = useState<DrawSeed | null>(null)
   const [deck, setDeck] = useState<Deck>(Deck.createStandardDeck())
   // for results
@@ -42,7 +43,11 @@ function App() {
       >
         Calculate
       </button>
-      <DrawSelect setDrawSeed={setDrawSeed} />
+      <DrawSelect
+        setDrawSeed={setDrawSeed}
+        activeModalId={activeModalId}
+        setActiveModalId={setActiveModalId}
+      />
     </>
   )
 }
