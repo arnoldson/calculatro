@@ -14,15 +14,13 @@ const types = Object.values(CardGroup.TYPE)
 const ranks = Object.values(PlayingCard.RANK)
 const suits = Object.values(PlayingCard.SUIT)
 
-export function DrawSelect() {
+export function DrawSelect({ setDrawSeed }: { setDrawSeed: Function }) {
   useEffect(() => {
     initialize()
   }, [])
   const [isFirstModalOpen, setIsFirstModalOpen] = useState(false)
   const [isSecondModalOpen, setIsSecondModalOpen] = useState(false)
 
-  // for current deck
-  const [deck, setDeck] = useState<Deck>(Deck.createEmptyDeck())
   // for current draw
   const [size, setSize] = useState<number>(5)
   const [drawType, setDrawType] = useState<string>("")
@@ -31,23 +29,15 @@ export function DrawSelect() {
   const [groupSize, setGroupSize] = useState<number>(1)
   const [groupRank, setGroupRank] = useState<string>("")
   const [groupSuit, setGroupSuit] = useState<string>("")
-  // for results
-  const [drawProbability, setDrawProbability] = useState<number>(-1)
 
   function shouldDisableAddCardGroup(): boolean {
     if (drawType === "" || groups.length === size) return true
     return false
   }
 
-  function shouldDisableCalculateButton(): boolean {
-    if (groups.length < 1) return true
-    return false
-  }
-
   function initialize() {
     resetCardGroup()
     resetDraw()
-    setDeck(Deck.createStandardDeck())
   }
 
   function resetDraw() {
@@ -84,6 +74,7 @@ export function DrawSelect() {
       return [...prevGroups, cardGroup]
     })
     resetCardGroup()
+    createDrawSeed()
     setIsSecondModalOpen(false)
     setIsFirstModalOpen(true)
   }
@@ -93,23 +84,16 @@ export function DrawSelect() {
     setIsFirstModalOpen(true)
   }
 
-  function formatProbabilityForDisplay(): string {
-    return (drawProbability * 100).toFixed(2) + "%"
-  }
-
-  function calculateDrawProbability() {
+  function createDrawSeed() {
     const seed = new DrawSeed(size).setType(drawType)
     for (const pojoGroup of groups) {
       seed.addGroup(CardGroup.fromPojo(pojoGroup))
     }
-    setDrawProbability(Calculator.calculateDrawSeedProbability(seed, deck))
+    setDrawSeed(seed)
   }
 
   return (
     <>
-      {drawProbability > -1 ? (
-        <h2>Draw Probability: {formatProbabilityForDisplay()}</h2>
-      ) : undefined}
       <h2>Draw:</h2>
       {groups.map((group, index) => {
         return (
@@ -119,7 +103,6 @@ export function DrawSelect() {
           </React.Fragment>
         )
       })}
-      <h2>Deck:</h2>
       <button onClick={createDraw}>Create Draw</button>
       {/* Modal 1/2: Select Type and Size of Draw */}
       <Modal
@@ -162,12 +145,6 @@ export function DrawSelect() {
           }}
         >
           Add Cards
-        </button>
-        <button
-          disabled={shouldDisableCalculateButton()}
-          onClick={calculateDrawProbability}
-        >
-          Calculate
         </button>
       </Modal>
       {/* Modal 2/2: Add Card Group */}
