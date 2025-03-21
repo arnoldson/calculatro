@@ -59,17 +59,9 @@ export class DrawSeed {
     }
     this.#occupied += cardGroup.size()
 
-    if (cardGroup.type() !== CardGroup.TYPE.NEGATIVE) {
-      console.log("adding group: " + cardGroup.countKey())
-    }
-
     if (cardGroup.type() === CardGroup.TYPE.NEGATIVE) {
       this.#groups.set(CardGroup.TYPE.NEGATIVE, cardGroup)
     } else if (this.#groups.has(cardGroup.countKey())) {
-      console.log(
-        "incrementing size for an existing group: " + cardGroup.countKey()
-      )
-
       this.#groups.get(cardGroup.countKey())?.incrementSizeBy(cardGroup.size())
     } else {
       this.#groups.set(cardGroup.countKey(), cardGroup)
@@ -169,5 +161,9 @@ export class DrawSeed {
       groups: CardGroup.toPojoGroups(this.#groups),
       occupied: this.#occupied,
     }
+  }
+
+  toString(): string {
+    return JSON.stringify(this.toPojo())
   }
 }

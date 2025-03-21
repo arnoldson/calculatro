@@ -87,6 +87,7 @@ export function DrawSelect({
       .setRank(groupRank)
       .setSuit(groupSuit)
     const existingCardGroup = groups[cardGroup.countKey()]
+
     if (existingCardGroup) {
       cardGroup.setSize(existingCardGroup.size + cardGroup.size())
     }
@@ -95,8 +96,7 @@ export function DrawSelect({
     setGroups((prevGroups) => {
       return { ...prevGroups, [cardGroup.countKey()]: cardGroupPojo }
     })
-    setOccupiedSize((prevOccupiedSize) => prevOccupiedSize + cardGroup.size())
-
+    setOccupiedSize((prevOccupiedSize) => prevOccupiedSize + groupSize)
     resetCardGroup()
   }
 
