@@ -3,6 +3,7 @@ import { DrawSelect } from "./components/DrawSelect"
 import { DrawSeed } from "./calculator/DrawSeed"
 import { Deck } from "./calculator/Deck"
 import { Calculator } from "./calculator/Calculator"
+import "./styles.css"
 
 function App() {
   const [drawSeed, setDrawSeed] = useState<DrawSeed | null>(null)

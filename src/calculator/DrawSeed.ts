@@ -58,8 +58,19 @@ export class DrawSeed {
       throw Error("CANNOT exceed draw size.")
     }
     this.#occupied += cardGroup.size()
+
+    if (cardGroup.type() !== CardGroup.TYPE.NEGATIVE) {
+      console.log("adding group: " + cardGroup.countKey())
+    }
+
     if (cardGroup.type() === CardGroup.TYPE.NEGATIVE) {
       this.#groups.set(CardGroup.TYPE.NEGATIVE, cardGroup)
+    } else if (this.#groups.has(cardGroup.countKey())) {
+      console.log(
+        "incrementing size for an existing group: " + cardGroup.countKey()
+      )
+
+      this.#groups.get(cardGroup.countKey())?.incrementSizeBy(cardGroup.size())
     } else {
       this.#groups.set(cardGroup.countKey(), cardGroup)
     }

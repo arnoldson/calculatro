@@ -4,9 +4,7 @@ import NumberSlider from "./NumberSlider"
 import { CardGroup, CardGroupPojo } from "../calculator/CardGroup"
 import { ButtonInputString } from "./ButtonInputString"
 import { PlayingCard } from "../calculator/PlayingCard"
-import { Deck } from "../calculator/Deck"
 import { DrawSeed } from "../calculator/DrawSeed"
-import { Calculator } from "../calculator/Calculator"
 import { Card } from "./Card"
 import React from "react"
 import CardCount from "./CardCount"
@@ -74,7 +72,6 @@ export function DrawSelect({ setDrawSeed }: { setDrawSeed: Function }) {
       return [...prevGroups, cardGroup]
     })
     resetCardGroup()
-    createDrawSeed()
     setIsSecondModalOpen(false)
     setIsFirstModalOpen(true)
   }
@@ -85,8 +82,13 @@ export function DrawSelect({ setDrawSeed }: { setDrawSeed: Function }) {
   }
 
   function createDrawSeed() {
+    console.log("createDrawSeed")
+    console.log("groups size: " + groups.length)
+
     const seed = new DrawSeed(size).setType(drawType)
     for (const pojoGroup of groups) {
+      console.log("group: " + JSON.stringify(pojoGroup))
+
       seed.addGroup(CardGroup.fromPojo(pojoGroup))
     }
     setDrawSeed(seed)
@@ -109,8 +111,23 @@ export function DrawSelect({ setDrawSeed }: { setDrawSeed: Function }) {
         isOpen={isFirstModalOpen}
         onClose={() => setIsFirstModalOpen(false)}
       >
-        <button onClick={() => setIsFirstModalOpen(false)}>Close</button>
+        <button
+          onClick={() => {
+            setIsFirstModalOpen(false)
+            initialize()
+          }}
+        >
+          Cancel
+        </button>
         <button onClick={() => initialize()}>Reset</button>
+        <button
+          onClick={() => {
+            createDrawSeed()
+            setIsFirstModalOpen(false)
+          }}
+        >
+          Done
+        </button>
         <div>
           <h2>TYPE:</h2>
           {types.map((type) => {
