@@ -1,6 +1,6 @@
 import "../css/card.css"
 
-interface PlayingCardProps {
+interface CardProps {
   rank: string
   suit: string
 }
@@ -35,7 +35,9 @@ function suitSymbol(suit: string): string {
   }
 }
 
-export const Card: React.FC<PlayingCardProps> = ({ rank, suit }) => {
+// TODO: Rename to something less ambiguous; Difference between Card and
+// PlayingCard is Card may or may not contain a suit and rank
+export const Card: React.FC<CardProps> = ({ rank, suit }) => {
   return (
     <div className="card">
       <div className={`corner top-left ${suitColor(suit)}`}>
